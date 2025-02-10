@@ -8,9 +8,9 @@ from data import ErrorsMessages
 
 class TestChangeUserData:
 
-    @allure.title('Проверка успешного изменения данных пользователя с авторизацией')
+    @allure.title('Тестирование успешного обновления профиля пользователя с авторизацией')
     @pytest.mark.parametrize('changed_field', ['email', 'password', 'name'])
-    def test_successful_user_data_change_with_auth(self, create_user, changed_field):
+    def test_user_data_update_success_with_authentication(self, create_user, changed_field):
         payload = {'email': create_user[1],
                    'password': TestData.test_user_password,
                    'name': TestData.test_user_name
@@ -25,9 +25,9 @@ class TestChangeUserData:
         assert 'email' in user_data
         assert 'name' in user_data
 
-    @allure.title('Проверка попытки изменения данных пользователя без авторизации')
+    @allure.title('Проверка неудачной попытки изменения данных пользователя без аутентификации')
     @pytest.mark.parametrize('changed_field', ['email', 'password', 'name'])
-    def test_failed_user_data_change_without_auth(self, create_user, changed_field):
+    def test_failed_user_data_change_without_authentication(self, create_user, changed_field):
         payload = {'email': create_user[1],
                    'password': TestData.test_user_password,
                    'name': TestData.test_user_name

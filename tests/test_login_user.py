@@ -8,7 +8,7 @@ from data import ErrorsMessages
 
 class TestLoginUser:
 
-    @allure.title('Проверка успешной авторизации пользователя')
+    @allure.title('Проверка успешного входа пользователя в систему')
     def test_successful_login(self, create_user):
         payload = {'email': create_user[1],
                    'password': TestData.test_user_password
@@ -24,7 +24,7 @@ class TestLoginUser:
         assert 'name' in user_data
         assert 'refreshToken' in response.json()
 
-    @allure.title('Проверка неуспешной авторизации пользователя, если неправильно указать email или пароль')
+    @allure.title('Проверка неудачной авторизации пользователя, при неправильно введённых email или пароле')
     @pytest.mark.parametrize('invalid_data', ['email', 'password'])
     def test_invalid_email_or_password(self, create_user, invalid_data):
         payload = {

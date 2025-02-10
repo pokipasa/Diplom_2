@@ -8,8 +8,8 @@ from data import ErrorsMessages
 
 class TestCreateOrder:
 
-    @allure.title('Проверка успешного создания заказа с авторизацией и ингредиентами')
-    def test_create_order_with_authorization_and_ingredients(self, create_user):
+    @allure.title('Успешная проверка создания заказа с аутентификацией и добавленными ингредиентами')
+    def test_successful_order_creation_with_auth_and_ingredients(self, create_user):
         payload = {'ingredients': ['61c0c5a71d1f82001bdaaa6c']}
         headers = {'Authorization': f'{create_user[2]}'}
         response = requests.post(Urls.create_order_url, data=payload, headers=headers)
@@ -20,21 +20,19 @@ class TestCreateOrder:
         order_data = response.json().get('order')
         assert 'number' in order_data
 
-
-    @allure.title('Проверка попытки создания заказа без авторизации')
+    @allure.title('Проверка неудачной попытки создания заказа без аутентификации')
     @patch('requests.post')
-    def test_create_order_without_authorization(self, mock_post):
+    def test_failed_order_creation_without_auth(self, mock_post):
         mock_post.return_value.status_code = 401
-        mock_post.return_value.json.return_value = {'success': False, 'message': EM.authorised_error_401}
-        payload = {'ingredients': ['61c0c5a71d1f82001bdaaa6c']}
+        mock_post.return_value.json.return_value = {'success': False, 'message': ErrorsMessages.authorised_error_401}
+        payload = {'ingredients': ['goodhash']}
         response = requests.post(Urls.create_order_url, data=payload)
         assert response.status_code == 401
         assert response.json().get('success') is False
-        assert response.json()['message'] == EM.authorised_error_401
+        assert response.json()['message'] == ErrorsMessages.authorised_error_401
 
-
-    @allure.title('Проверка попытки создания заказа без ингредиентов')
-    def test_create_order_without_ingredients(self, create_user):
+    @allure.title('Проверка неудачной попытки создания заказа без выбора ингредиентов')
+    def test_failed_order_creation_without_ingredients(self, create_user):
         payload = {}
         headers = {'Authorization': f'{create_user[2]}'}
         response = requests.post(Urls.create_order_url, data=payload, headers=headers)
@@ -42,9 +40,8 @@ class TestCreateOrder:
         assert response.json().get('success') is False
         assert response.json()['message'] == ErrorsMessages.create_order_error_400
 
-
-    @allure.title('Проверка неудачной попытки создания заказа с неправильным хешем ингредиента')
-    def test_order_creation_with_wrong_ingredients_hash_failed(self, create_user):
+    @allure.title('Проверка отказа в создании заказа с неверным хеш-кодом ингредиента')
+    def test_failed_order_creation_with_invalid_ingredient_hash(self, create_user):
         payload = {'ingredients': ['wronghash']}
         headers = {'Authorization': f'{create_user[2]}'}
         response = requests.post(Urls.create_order_url, data=payload, headers=headers)

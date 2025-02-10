@@ -7,7 +7,7 @@ from data import ErrorsMessages
 
 class TestGetUserOrders:
 
-    @allure.title('Проверка получения заказов авторизованным пользователем')
+    @allure.title('Проверка успешного получения заказов для авторизованного пользователя')
     def test_get_user_orders_with_authorization(self, create_user):
         payload = {'ingredients': ['dfbgdrselcmw5u']}
         headers = {'Authorization': f'{create_user[2]}'}
@@ -16,7 +16,7 @@ class TestGetUserOrders:
         assert response.status_code == 200
         assert response.json().get('success') is True
 
-    @allure.title('Проверка попытки получения заказов неавторизованным пользователем')
+    @allure.title('Проверка неудачной попытки получения заказов для неавторизованного пользователя')
     def test_get_user_orders_without_authorization(self, create_user):
         payload = {'ingredients': ['dfbgdrselcmw5u']}
         headers = {'Authorization': f'{create_user[2]}'}
