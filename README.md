@@ -68,5 +68,5 @@ conftest.py
 $ pip install -r requirements.txt
 Создание Allure-отчёта
 
-$ pytest tests.py --alluredir=allure_results
+$ pytest tests --alluredir=allure_results
 $ allure serve allure_results
