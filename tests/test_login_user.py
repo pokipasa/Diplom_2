@@ -11,10 +11,10 @@ class TestLoginUser:
     @allure.title('Проверка успешного входа пользователя в систему')
     def test_successful_login(self, create_user):
         payload = {'email': create_user[1],
-                   'password': TestData.test_user_password
+                   'password': TestData.TEST_USER_PASSWORD
                    }
         headers = {'Authorization': f'{create_user[2]}'}
-        response = requests.post(Urls.login_url, data=payload, headers=headers)
+        response = requests.post(Urls.LOGIN_URL, data=payload, headers=headers)
         assert response.status_code == 200
         assert response.json().get('success') is True
         assert 'user' in response.json()
@@ -29,11 +29,11 @@ class TestLoginUser:
     def test_invalid_email_or_password(self, create_user, invalid_data):
         payload = {
             'email': create_user[0],
-            'password': TestData.test_user_password
+            'password': TestData.TEST_USER_PASSWORD
         }
         payload[invalid_data] = f'{payload[invalid_data]}a'
         headers = {'Authorization': f'{create_user[2]}'}
-        response = requests.post(Urls.login_url, data=payload, headers=headers)
+        response = requests.post(Urls.LOGIN_URL, data=payload, headers=headers)
         assert response.status_code == 401
         assert response.json().get('success') is False
-        assert response.json()['message'] == ErrorsMessages.login_user_error_401
+        assert response.json()['message'] == ErrorsMessages.LOGIN_USER_ERROR_401
